@@ -1,0 +1,274 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 14.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     13210,        265]
+NotebookOptionsPosition[      8865,        209]
+NotebookOutlinePosition[      9196,        223]
+CellTagsIndexPosition[      9153,        220]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["FeynScalar: Feynman diagrams for scalar field theories", "Title",ExpressionUUID->"ffa7790a-0341-4d0d-b03d-1c50954e1e77"],
+
+Cell["\<\
+Enter the interaction Lagrangian, the process and the order. FeynScalar \
+generates every diagram, its symmetry factor, momentum routing and amplitude \
+i\[ScriptCapitalM]; one-loop integrals come out as Passarino\[Dash]Veltman \
+functions A0, B0, C0, D0 (LoopTools normalisation). DrawDiagrams draws the \
+diagrams with Python/matplotlib (draw_feynman.py, same folder).\
+\>", "Text",ExpressionUUID->"5b29c5fe-e4d7-4bab-b8d4-4d13c160a407"],
+
+Cell["\<\
+Conventions: metric (+,\[Minus],\[Minus],\[Minus]); propagator i/(p\.b2\
+\[Minus]m\.b2+i\[Epsilon]); vertex factor = i \[Times] coefficient in Lint \
+\[Times] \[Product]n! (so \[Minus]\[Lambda]/4! \[Phi]\:2074 gives \[Minus]i\
+\[Lambda]); p1, p2, ... are incoming momenta followed by outgoing ones; s = \
+(p1+p2)\.b2, t = (p1\[Minus]p3)\.b2, u = (p1\[Minus]p4)\.b2.\
+\>", "Text",ExpressionUUID->"0aaa1027-a616-4151-a839-849db21c492c"],
+
+Cell["Get[FileNameJoin[{NotebookDirectory[], \"FeynScalar.wl\"}]]", "Input",ExpressionUUID->"ae346b56-911e-496c-bf37-50d4e95cafe8"],
+
+Cell["1. Real scalar with \[Phi]^4", "Section",ExpressionUUID->"b60aefc3-41c2-4df2-9818-a4710727c64b"],
+
+Cell["phi4 = ScalarTheory[{RealScalar[\[Phi], m]}, -\[Lambda]/4! \[Phi]^4]", \
+"Input",ExpressionUUID->"e5c8a72b-28fd-4192-a5a0-2603476deba3"],
+
+Cell["FeynmanRules[phi4]", "Input",ExpressionUUID->"1fabedfd-e193-4989-bcb9-b9b0cf527c24"],
+
+Cell["\<\
+Tree level and one loop for \[Phi]\[Phi] \[RightArrow] \[Phi]\[Phi]. \
+\"Loops\" -> L picks the loop order; \"Order\" -> n picks the number of \
+vertices instead.\
+\>", "Text",ExpressionUUID->"fc8bd4ff-fa76-4107-9a13-c3f80515c30f"],
+
+Cell["\<\
+diags = FeynmanDiagrams[phi4, {\[Phi], \[Phi]} -> {\[Phi], \[Phi]}, \"Loops\" \
+-> {0, 1}]\
+\>", "Input",ExpressionUUID->"4a0f9111-a0d8-4d7a-a133-f9b857479cbe"],
+
+Cell["DiagramTable[diags]", "Input",ExpressionUUID->"45889153-8caa-4fb5-a7d4-31737ed73416"],
+
+Cell["Amplitude[diags]", "Input",ExpressionUUID->"6446c996-16ff-401a-8f8a-d47fde0283ab"],
+
+Cell["DrawDiagrams[diags, \"ShowAmplitude\" -> True]", "Input",ExpressionUUID->"832d1a43-0b64-4ef7-b685-cd158fc2f454"],
+
+Cell["\<\
+Each diagram stores its data. The integrand shows the momentum routing \
+(Den[q, m] = q\.b2 \[Minus] m\.b2):\
+\>", "Text",ExpressionUUID->"743ef7f9-1aa0-4c3b-b7dd-11c9ff670416"],
+
+Cell["diags[[2]][\"Integrand\"]", "Input",ExpressionUUID->"c6c49cba-a03e-48f1-bb2b-52cbd77a749c"],
+
+Cell["diags[[2]][\"Properties\"]", "Input",ExpressionUUID->"cdb52641-9878-40e7-a723-3a37a0172d68"],
+
+Cell["\<\
+Self-energy up to two loops (for a 2-point function, i\[ScriptCapitalM] is \
+the sum of 1PI diagrams, i.e. \[Minus]i\[CapitalSigma](p\.b2)):\
+\>", "Text",ExpressionUUID->"0b57a53b-f5ce-4499-9637-61af3d933c69"],
+
+Cell["\<\
+se = FeynmanDiagrams[phi4, {\[Phi]} -> {\[Phi]}, \"Loops\" -> {1, 2}];
+DiagramTable[se]\
+\>", "Input",ExpressionUUID->"8ad10c9b-9afc-48fe-9ece-c56edb9ec409"],
+
+Cell["DrawDiagrams[se, \"ShowMomenta\" -> True]", "Input",ExpressionUUID->"e14e219f-7f38-494a-8d6d-f28e4ed9f293"],
+
+Cell["2. Real scalar with \[Phi]^3", "Section",ExpressionUUID->"ead6174d-234b-4cb9-9a40-f264b6a6dd5c"],
+
+Cell["\<\
+phi3 = ScalarTheory[{RealScalar[\[Phi], m]}, -g/3! \[Phi]^3];
+d3 = FeynmanDiagrams[phi3, {\[Phi], \[Phi]} -> {\[Phi], \[Phi]}, \"Loops\" -> \
+1];
+DiagramTable[d3]\
+\>", "Input",ExpressionUUID->"c9f93f98-93b3-4ec0-abfd-faf51afb1308"],
+
+Cell["\<\
+DrawDiagrams[d3, \"File\" -> FileNameJoin[{NotebookDirectory[], \"examples\", \
+\"phi3_one_loop.pdf\"}]]\
+\>", "Input",ExpressionUUID->"8bf59153-8ff8-4ac2-b314-b1cf8c0527d4"],
+
+Cell["\<\
+Options: \"Tadpoles\" -> False drops tadpoles, \"Diagrams\" -> \"1PI\" keeps \
+one-particle-irreducible diagrams, \"Diagrams\" -> \"Connected\" also keeps \
+self-energies on external legs (then legs are off shell).\
+\>", "Text",ExpressionUUID->"31b2fda0-2032-4e74-8cef-4a9b6ed4717f"],
+
+Cell["\<\
+Length /@ {FeynmanDiagrams[phi3, {\[Phi], \[Phi]} -> {\[Phi], \[Phi]}, \
+\"Loops\" -> 1, \"Tadpoles\" -> False],
+  FeynmanDiagrams[phi3, {\[Phi], \[Phi]} -> {\[Phi], \[Phi]}, \"Loops\" -> 1, \
+\"Diagrams\" -> \"1PI\"]}\
+\>", "Input",ExpressionUUID->"ec69dca8-29a3-4fa0-b15c-2b1f68bb1dad"],
+
+Cell["3. Complex scalar with |\[Chi]|^4", "Section",ExpressionUUID->"d15979de-b58c-43fa-9da4-4e7653a0715b"],
+
+Cell["\<\
+Write the conjugate field as Conjugate[\[Chi]] (type \[Chi] Esc co Esc) or \
+use Abs[\[Chi]]. In a process, Anti[\[Chi]] is the antiparticle.\
+\>", "Text",ExpressionUUID->"44dc126c-eb24-4f2d-bccd-d9378cf39106"],
+
+Cell["\<\
+cs = ScalarTheory[{ComplexScalar[\[Chi], M]}, -\[Lambda] (Conjugate[\[Chi]] \
+\[Chi])^2];
+FeynmanRules[cs]\
+\>", "Input",ExpressionUUID->"223fd8e7-8e9c-40ee-b7b9-8e5f4b8876ec"],
+
+Cell["\<\
+cc = FeynmanDiagrams[cs, {\[Chi], \[Chi]} -> {\[Chi], \[Chi]}, \"Loops\" -> \
+{0, 1}];
+ca = FeynmanDiagrams[cs, {\[Chi], Anti[\[Chi]]} -> {\[Chi], Anti[\[Chi]]}, \
+\"Loops\" -> {0, 1}];
+DiagramTable[cc]\
+\>", "Input",ExpressionUUID->"2f007449-38e7-41cc-94a2-f3d6e3ba4200"],
+
+Cell["DrawDiagrams[Join[cc, ca], \"ShowMomenta\" -> True]", "Input",ExpressionUUID->"2e2bfa54-d93e-4007-9679-02568e918657"],
+
+Cell["4. Scalar Yukawa theory  g \[Phi] \[Chi]*\[Chi]", "Section",ExpressionUUID->"2ebb20e7-6fc7-4b41-ac74-07cc996c39e0"],
+
+Cell["\<\
+The third argument of ComplexScalar is an optional symbol for the conjugate \
+field.\
+\>", "Text",ExpressionUUID->"5da42c5f-94b4-42b4-978c-033ee4f0be52"],
+
+Cell["\<\
+yuk = ScalarTheory[{RealScalar[\[Phi], m], ComplexScalar[\[Chi], M, \
+\[Chi]b]}, -g \[Phi] \[Chi]b \[Chi]];
+Amplitude[FeynmanDiagrams[yuk, {\[Chi], \[Chi]b} -> {\[Chi], \[Chi]b}]]\
+\>", "Input",ExpressionUUID->"d6921d67-f0cd-4bff-be90-77ee372c186e"],
+
+Cell["\<\
+DrawDiagrams[Join[FeynmanDiagrams[yuk, {\[Chi], \[Chi]b} -> {\[Chi], \
+\[Chi]b}], FeynmanDiagrams[yuk, {\[Chi], \[Chi]b} -> {\[Phi], \[Phi]}]]]\
+\>", "Input",ExpressionUUID->"d29f5b56-d4df-4b7d-93c0-7c728c5d71e9"],
+
+Cell["\<\
+seY = FeynmanDiagrams[yuk, {\[Phi]} -> {\[Phi]}, \"Loops\" -> 1];
+seY[[1]][\"iM\"]\
+\>", "Input",ExpressionUUID->"cc90a6f1-6c87-4b66-9991-42c5fc96afde"],
+
+Cell["5. Several couplings: choose the order coupling by coupling", "Section",ExpressionUUID->"3d31b0a9-58a4-4331-9c0a-7d892c482001"],
+
+Cell["\<\
+mix = ScalarTheory[{RealScalar[\[Phi], m]}, -g/3! \[Phi]^3 - \[Lambda]/4! \
+\[Phi]^4];
+gl = FeynmanDiagrams[mix, {\[Phi], \[Phi]} -> {\[Phi], \[Phi]}, \"Order\" -> \
+{g -> 2, \[Lambda] -> 1}];
+Length[gl]\
+\>", "Input",ExpressionUUID->"3f6cf8cc-3ff0-4113-a469-0dae350e492f"],
+
+Cell["DrawDiagrams[gl[[1 ;; 8]]]", "Input",ExpressionUUID->"f6f8ae15-cd95-4d79-bea1-f1aa081f1096"],
+
+Cell["6. Loop functions", "Section",ExpressionUUID->"56b40182-5c06-489e-8265-6db03e9ec134"],
+
+Cell["\<\
+PVExplicit writes the PV functions as Feynman-parameter integrals; \
+EvaluateLoops evaluates them numerically (\"DeltaUV\" -> 0 is MS-bar, \"Mu\" \
+is the scale \[Mu]). C0 and D0 above threshold use a deformed integration \
+contour.\
+\>", "Text",ExpressionUUID->"3da9a999-5f2b-47b2-9ef1-99ef74581976"],
+
+Cell["PVExplicit[B0[s, m^2, m^2]]", "Input",ExpressionUUID->"8aaae8a6-c606-45d8-991c-263fb2ada1d4"],
+
+Cell["\<\
+amp = Amplitude[FeynmanDiagrams[phi4, {\[Phi], \[Phi]} -> {\[Phi], \[Phi]}, \
+\"Loops\" -> {0, 1}]];
+EvaluateLoops[amp, {\[Lambda] -> 1, m -> 1, s -> 5, t -> -1, u -> 0}, \
+\"DeltaUV\" -> 0, \"Mu\" -> 1]\
+\>", "Input",ExpressionUUID->"a17791a5-3e4b-4b11-bd14-e7c05531d93a"],
+
+Cell["\<\
+EvaluateLoops[Amplitude[d3], {g -> 1, m -> 1, s -> 6, t -> -1, u -> -1}, \
+\"DeltaUV\" -> 0, \"Mu\" -> 1]\
+\>", "Input",ExpressionUUID->"dec2f433-339b-4be2-9ee0-2171b37bb3a9"],
+
+Cell["7. Your own theory", "Section",ExpressionUUID->"412cc23e-f3e3-43d3-bdf0-3f5f692c4175"],
+
+Cell["\<\
+Template: declare the fields, write Lint, choose the process and the order.\
+\>", "Text",ExpressionUUID->"5e772c69-2e56-41a6-9c92-3a0a31e0c1f9"],
+
+Cell["\<\
+my = ScalarTheory[{RealScalar[\[Phi]1, m1], RealScalar[\[Phi]2, m2]}, -g/2 \
+\[Phi]1 \[Phi]2^2 - \[Lambda]/4 \[Phi]1^2 \[Phi]2^2];
+myd = FeynmanDiagrams[my, {\[Phi]2, \[Phi]2} -> {\[Phi]2, \[Phi]2}, \"Loops\" \
+-> 0];
+DiagramTable[myd]\
+\>", "Input",ExpressionUUID->"716abd39-e702-414b-9e60-40ff0b032c5f"],
+
+Cell["DrawDiagrams[myd]", "Input",ExpressionUUID->"f9a7239c-2b1e-4b15-bd22-612c69da8767"]
+},
+FrontEndVersion->"14.0 for Mac OS X ARM (64-bit) (2023\:5e7412\:670812\:65e5)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"1b659bfd-dd12-4137-bef2-8b99cf978f5d"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 126, 0, 70, "Title",ExpressionUUID->"ffa7790a-0341-4d0d-b03d-1c50954e1e77"],
+Cell[687, 22, 449, 6, 70, "Text",ExpressionUUID->"5b29c5fe-e4d7-4bab-b8d4-4d13c160a407"],
+Cell[1139, 30, 444, 6, 70, "Text",ExpressionUUID->"0aaa1027-a616-4151-a839-849db21c492c"],
+Cell[1586, 38, 131, 0, 70, "Input",ExpressionUUID->"ae346b56-911e-496c-bf37-50d4e95cafe8"],
+Cell[1720, 40, 102, 0, 70, "Section",ExpressionUUID->"b60aefc3-41c2-4df2-9818-a4710727c64b"],
+Cell[1825, 42, 142, 1, 70, "Input",ExpressionUUID->"e5c8a72b-28fd-4192-a5a0-2603476deba3"],
+Cell[1970, 45, 90, 0, 70, "Input",ExpressionUUID->"1fabedfd-e193-4989-bcb9-b9b0cf527c24"],
+Cell[2063, 47, 241, 4, 70, "Text",ExpressionUUID->"fc8bd4ff-fa76-4107-9a13-c3f80515c30f"],
+Cell[2307, 53, 170, 3, 70, "Input",ExpressionUUID->"4a0f9111-a0d8-4d7a-a133-f9b857479cbe"],
+Cell[2480, 58, 91, 0, 70, "Input",ExpressionUUID->"45889153-8caa-4fb5-a7d4-31737ed73416"],
+Cell[2574, 60, 88, 0, 70, "Input",ExpressionUUID->"6446c996-16ff-401a-8f8a-d47fde0283ab"],
+Cell[2665, 62, 118, 0, 70, "Input",ExpressionUUID->"832d1a43-0b64-4ef7-b685-cd158fc2f454"],
+Cell[2786, 64, 187, 3, 70, "Text",ExpressionUUID->"743ef7f9-1aa0-4c3b-b7dd-11c9ff670416"],
+Cell[2976, 69, 97, 0, 70, "Input",ExpressionUUID->"c6c49cba-a03e-48f1-bb2b-52cbd77a749c"],
+Cell[3076, 71, 98, 0, 70, "Input",ExpressionUUID->"cdb52641-9878-40e7-a723-3a37a0172d68"],
+Cell[3177, 73, 219, 3, 70, "Text",ExpressionUUID->"0b57a53b-f5ce-4499-9637-61af3d933c69"],
+Cell[3399, 78, 167, 3, 70, "Input",ExpressionUUID->"8ad10c9b-9afc-48fe-9ece-c56edb9ec409"],
+Cell[3569, 83, 113, 0, 70, "Input",ExpressionUUID->"e14e219f-7f38-494a-8d6d-f28e4ed9f293"],
+Cell[3685, 85, 102, 0, 70, "Section",ExpressionUUID->"ead6174d-234b-4cb9-9a40-f264b6a6dd5c"],
+Cell[3790, 87, 242, 5, 70, "Input",ExpressionUUID->"c9f93f98-93b3-4ec0-abfd-faf51afb1308"],
+Cell[4035, 94, 184, 3, 70, "Input",ExpressionUUID->"8bf59153-8ff8-4ac2-b314-b1cf8c0527d4"],
+Cell[4222, 99, 293, 4, 70, "Text",ExpressionUUID->"31b2fda0-2032-4e74-8cef-4a9b6ed4717f"],
+Cell[4518, 105, 298, 5, 70, "Input",ExpressionUUID->"ec69dca8-29a3-4fa0-b15c-2b1f68bb1dad"],
+Cell[4819, 112, 107, 0, 70, "Section",ExpressionUUID->"d15979de-b58c-43fa-9da4-4e7653a0715b"],
+Cell[4929, 114, 220, 3, 70, "Text",ExpressionUUID->"44dc126c-eb24-4f2d-bccd-d9378cf39106"],
+Cell[5152, 119, 186, 4, 70, "Input",ExpressionUUID->"223fd8e7-8e9c-40ee-b7b9-8e5f4b8876ec"],
+Cell[5341, 125, 282, 6, 70, "Input",ExpressionUUID->"2f007449-38e7-41cc-94a2-f3d6e3ba4200"],
+Cell[5626, 133, 123, 0, 70, "Input",ExpressionUUID->"2e2bfa54-d93e-4007-9679-02568e918657"],
+Cell[5752, 135, 121, 0, 70, "Section",ExpressionUUID->"2ebb20e7-6fc7-4b41-ac74-07cc996c39e0"],
+Cell[5876, 137, 163, 3, 70, "Text",ExpressionUUID->"5da42c5f-94b4-42b4-978c-033ee4f0be52"],
+Cell[6042, 142, 259, 4, 70, "Input",ExpressionUUID->"d6921d67-f0cd-4bff-be90-77ee372c186e"],
+Cell[6304, 148, 223, 3, 70, "Input",ExpressionUUID->"d29f5b56-d4df-4b7d-93c0-7c728c5d71e9"],
+Cell[6530, 153, 162, 3, 70, "Input",ExpressionUUID->"cc90a6f1-6c87-4b66-9991-42c5fc96afde"],
+Cell[6695, 158, 133, 0, 70, "Section",ExpressionUUID->"3d31b0a9-58a4-4331-9c0a-7d892c482001"],
+Cell[6831, 160, 283, 6, 70, "Input",ExpressionUUID->"3f6cf8cc-3ff0-4113-a469-0dae350e492f"],
+Cell[7117, 168, 98, 0, 70, "Input",ExpressionUUID->"f6f8ae15-cd95-4d79-bea1-f1aa081f1096"],
+Cell[7218, 170, 91, 0, 70, "Section",ExpressionUUID->"56b40182-5c06-489e-8265-6db03e9ec134"],
+Cell[7312, 172, 311, 5, 70, "Text",ExpressionUUID->"3da9a999-5f2b-47b2-9ef1-99ef74581976"],
+Cell[7626, 179, 99, 0, 70, "Input",ExpressionUUID->"8aaae8a6-c606-45d8-991c-263fb2ada1d4"],
+Cell[7728, 181, 283, 5, 70, "Input",ExpressionUUID->"a17791a5-3e4b-4b11-bd14-e7c05531d93a"],
+Cell[8014, 188, 185, 3, 70, "Input",ExpressionUUID->"dec2f433-339b-4be2-9ee0-2171b37bb3a9"],
+Cell[8202, 193, 92, 0, 70, "Section",ExpressionUUID->"412cc23e-f3e3-43d3-bdf0-3f5f692c4175"],
+Cell[8297, 195, 154, 2, 70, "Text",ExpressionUUID->"5e772c69-2e56-41a6-9c92-3a0a31e0c1f9"],
+Cell[8454, 199, 315, 6, 70, "Input",ExpressionUUID->"716abd39-e702-414b-9e60-40ff0b032c5f"],
+Cell[8772, 207, 89, 0, 70, "Input",ExpressionUUID->"f9a7239c-2b1e-4b15-bd22-612c69da8767"]
+}
+]
+*)
+
+(* End of internal cache information *)
